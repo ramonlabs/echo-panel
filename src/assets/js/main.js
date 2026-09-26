@@ -98,9 +98,6 @@ function handleMessage(msg) {
         case 'chat_message':
             handleChatMessage(msg.data)
             break
-        case 'external_message':
-            handleExternalMessage(msg.data)
-            break
         case 'wake_command':
             logs.log(`Wake command: ${msg.data.command}`, 'event')
             break
@@ -132,16 +129,6 @@ function handleChatMessage(data) {
     chat.removeInterimTranscription()
     chat.removeProcessingMessage()
     if (data.response?.trim()) chat.addMessage(data.response, 'assistant')
-}
-
-function handleExternalMessage(data) {
-    if (data.message?.trim()) {
-        chat.addMessage(data.message, 'user', {
-            source: data.source || 'external',
-            username: data.username || 'anonymous',
-            color: data.metadata?.color || '',
-        })
-    }
 }
 
 async function sendChatMessage() {
@@ -231,6 +218,32 @@ function setAvatarState(state) {
     logs.log(`State: ${state}`, 'debug')
 }
 
+// the palette belongs to whichever rig is loaded, so ask instead of assuming
+async function loadColorButtons() {
+    const holder = document.getElementById('color-buttons')
+    if (!holder) return
+
+    let textures = []
+
+    try {
+        const res = await fetch(API('/character'))
+        if (res.ok) textures = (await res.json()).textures || []
+    } catch {
+        logs.log('Could not read the avatar character', 'debug')
+    }
+
+    holder.replaceChildren()
+
+    for (const name of textures) {
+        const btn = document.createElement('button')
+        // the label is for reading, the value is what the avatar gets
+        btn.textContent = name.charAt(0).toUpperCase() + name.slice(1)
+        btn.dataset.texture = name
+        btn.addEventListener('click', () => setAvatarTexture(name))
+        holder.appendChild(btn)
+    }
+}
+
 function setAvatarTexture(texture) {
     connection.sendAction('set_texture', { texture })
     logs.log(`Color: ${texture}`, 'debug')
@@ -286,7 +299,7 @@ async function restoreConversation() {
         const data = await res.json()
         const messages = data.messages || data.conversation || []
         if (messages.length) chat.restore(messages)
-    } catch (e) {
+    } catch {
         /* ignore */
     }
 }
@@ -301,7 +314,7 @@ async function updatePerformanceStats() {
             tts: fmtMs(data.last_tts_ms),
             firstAudio: fmtMs(data.last_first_audio_ms),
         })
-    } catch (e) {
+    } catch {
         /* ignore */
     }
     updateContextUsage()
@@ -311,19 +324,9 @@ async function updateContextUsage() {
     try {
         const data = await (await fetch(API('/usage'))).json()
         status.updateContextUsage(data)
-    } catch (e) {
+    } catch {
         /* ignore */
     }
-}
-
-// TODO: POST /donations/test with donor name, amount, and message from form inputs
-function sendTestDonation() {
-    logs.log('Donations not implemented yet', 'warn')
-}
-
-// TODO: POST /discord/join or /discord/leave using the channel name input
-function toggleDiscordVoiceChannel() {
-    logs.log('Discord not implemented yet', 'warn')
 }
 
 async function refreshSoundEffects() {
@@ -337,7 +340,7 @@ async function refreshSoundEffects() {
             aliases: aliases.length,
         })
         renderSoundList(listEl, names)
-    } catch (e) {
+    } catch {
         if (listEl) {
             listEl.innerHTML =
                 '<div class="loading-sound-text">Error loading sounds</div>'
@@ -392,7 +395,6 @@ function refreshTab(tab) {
     if (tab === 'controls') updatePerformanceStats()
     else if (tab === 'integrations') {
         refreshSoundEffects()
-        // TODO: fetch and display twitch, discord, and donation status
     } else if (tab === 'memory') {
         memory.updateStatsDisplay()
         memory.renderSubTab()
@@ -462,11 +464,7 @@ function wireControlButtons() {
             setAvatarExpression(btn.textContent.trim().toLowerCase())
         )
     })
-    getControlGroupButtons('Color').forEach((btn) => {
-        btn.addEventListener('click', () =>
-            setAvatarTexture(btn.textContent.trim().toLowerCase())
-        )
-    })
+    loadColorButtons()
     getControlGroupButtons('State').forEach((btn) => {
         btn.addEventListener('click', () =>
             setAvatarState(btn.textContent.trim().toLowerCase())
@@ -482,13 +480,6 @@ function wireControlButtons() {
 }
 
 function wireIntegrationControls() {
-    const discordBtn = document.getElementById('discord-vc-btn')
-    if (discordBtn)
-        discordBtn.addEventListener('click', toggleDiscordVoiceChannel)
-
-    const donate = document.querySelector('.donation-test-button')
-    if (donate) donate.addEventListener('click', sendTestDonation)
-
     const sounds = getControlGroupButtons('Sound Effects')
     if (sounds[0]) sounds[0].addEventListener('click', refreshSoundEffects)
     if (sounds[1]) sounds[1].addEventListener('click', playSoundEffect)

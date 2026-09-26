@@ -5,10 +5,6 @@
     --text-muted: #999999;
     --bg-item-muted: #363636;
     --bg-header: #272727ff;
-    --discord-color: #7289da;
-    --discord-color-hover: #5b73c7;
-    --donation-button-color: #10b981;
-    --donation-button-color-hover: #0e9f7e;
     --memory-stat-color: #d3d3d3;
     --status-color-ok: #4ade80;
     --status-color-error: #ef4444;
@@ -31,7 +27,6 @@
     --bg-body: #0f1117;
     --accent: #7c83ff;
 }
-
 
 * {
     margin: 0;
@@ -603,115 +598,6 @@ body {
     color: white;
 }
 
-.discord-join-form {
-    margin-top: 10px;
-}
-
-.discord-join-form-input {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 8px;
-}
-
-.discord-channel-name {
-    background: var(--bg-item-muted);
-    color: white;
-    font-size: 0.6875rem;
-    border: none;
-    border-radius: 4px;
-    padding: 8px;
-    flex: 1;
-    outline: none;
-}
-
-.discord-join-button {
-    border-radius: 4px;
-    border: none;
-    padding: 8px 0;
-    width: 70px;
-    flex-shrink: 0;
-    color: white;
-    cursor: pointer;
-    font-size: 0.6875rem;
-    background: var(--discord-color);
-    transition: all 0.2s;
-}
-
-.discord-join-button:active {
-    transform: scale(0.88);
-}
-
-.discord-join-button:hover {
-    background: var(--discord-color-hover);
-}
-
-.discord-join-button.leaving {
-    background: var(--status-color-error);
-}
-
-.discord-join-button.leaving:hover {
-    background: #dc2626;
-}
-
-.donation-test-form {
-    margin-top: 10px;
-}
-
-.donation-test-name,
-.donation-test-amount {
-    background: var(--bg-item-muted);
-    color: white;
-    width: 100%;
-    margin-bottom: 6px;
-    font-size: 0.6875rem;
-    border: none;
-    border-radius: 4px;
-    padding: 8px;
-    flex: 1;
-    outline: none;
-    color: white;
-}
-
-.donation-test-message {
-    background: var(--bg-item-muted);
-    color: white;
-    width: 100%;
-    min-height: 50px;
-    margin-bottom: 6px;
-    padding: 8px;
-    border: none;
-    border-radius: 4px;
-    resize: vertical;
-    font-size: 0.6875rem;
-    outline: none;
-    color: white;
-}
-
-.donation-test-button {
-    width: 100%;
-    padding: 8px;
-    border-radius: 4px;
-    border: none;
-    font-size: 0.6875rem;
-    color: white;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: var(--donation-button-color);
-}
-
-.donation-test-button:hover {
-    background: var(--donation-button-color-hover);
-}
-
-.donation-test-button:active {
-    transform: scale(0.94);
-}
-
-.donation-test-button:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
 .sound-list {
     margin-top: 10px;
     max-height: 150px;
@@ -947,54 +833,6 @@ code {
     opacity: 0.7;
     font-style: italic;
     width: fit-content;
-}
-
-.chat-message.source-twitch {
-    background: linear-gradient(135deg, #9147ff 0%, #772ce8 100%);
-    border-left: 3px solid #bf94ff;
-    color: white;
-}
-
-.chat-message.source-discord {
-    background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
-    border-left: 3px solid #7983f5;
-    color: white;
-}
-
-.chat-message.source-external {
-    background-color: var(--bg-item-muted);
-    border-left: 3px solid var(--text-muted);
-    color: white;
-}
-
-.source-badge {
-    display: inline-block;
-    font-size: 0.5625rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    padding: 2px 6px;
-    border-radius: 3px;
-    margin-right: 6px;
-    vertical-align: middle;
-}
-
-.source-badge.twitch {
-    background: #bf94ff;
-    color: #1a1a2e;
-}
-
-.source-badge.discord {
-    background: #7983f5;
-    color: #1a1a2e;
-}
-
-.source-badge.external {
-    background: var(--text-muted);
-    color: white;
-}
-
-.chat-username {
-    font-weight: bold;
 }
 
 .chat-text {

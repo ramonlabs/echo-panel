@@ -1,6 +1,11 @@
 import { MicVAD } from '@ricky0123/vad-web'
 import { CONFIG } from './config.js'
 
+const SAMPLE_RATE = 16000
+const WAV_HEADER_BYTES = 44
+const PCM_SCALE_NEG = 0x8000
+const PCM_SCALE_POS = 0x7fff
+
 export class Connect extends EventTarget {
     constructor() {
         super()
@@ -68,7 +73,7 @@ export class Connect extends EventTarget {
 
 // wraps the float32 utterance the vad hands back into a 16khz mono pcm16 wav blob
 function float32ToWav(samples, sampleRate) {
-    const buffer = new ArrayBuffer(44 + samples.length * 2)
+    const buffer = new ArrayBuffer(WAV_HEADER_BYTES + samples.length * 2)
     const view = new DataView(buffer)
     const writeStr = (offset, str) => {
         for (let i = 0; i < str.length; i++) {
@@ -90,10 +95,14 @@ function float32ToWav(samples, sampleRate) {
     writeStr(36, 'data')
     view.setUint32(40, samples.length * 2, true)
 
-    let offset = 44
+    let offset = WAV_HEADER_BYTES
     for (let i = 0; i < samples.length; i++) {
         const s = Math.max(-1, Math.min(1, samples[i]))
-        view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true)
+        view.setInt16(
+            offset,
+            s < 0 ? s * PCM_SCALE_NEG : s * PCM_SCALE_POS,
+            true
+        )
         offset += 2
     }
 
@@ -123,7 +132,7 @@ export class ContinuousListener {
                 preSpeechPadFrames: 3,
                 onSpeechStart: () => this.onSpeechStart?.(),
                 onSpeechEnd: async (audio) => {
-                    await this.onAudioReady?.(float32ToWav(audio, 16000))
+                    await this.onAudioReady?.(float32ToWav(audio, SAMPLE_RATE))
                     this.onSpeechEnd?.()
                 },
             })

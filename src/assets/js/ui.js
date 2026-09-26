@@ -3,19 +3,6 @@ const setText = (id, value) => {
     if (el) el.textContent = value
 }
 
-const setStatus = (id, value, color) => {
-    const el = document.getElementById(id)
-    if (!el) return
-    el.textContent = value
-    if (color) el.style.color = color
-}
-
-const COLOR = {
-    ok: 'var(--status-color-ok)',
-    error: 'var(--status-color-error)',
-    muted: 'var(--text-muted)',
-}
-
 const cap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s)
 
 export class PanelUI {
@@ -29,8 +16,8 @@ export class PanelUI {
             .forEach((tabContent) => {
                 tabContent.classList.remove('active')
             })
-        document.querySelectorAll('.panel-tab').forEach((tab) => {
-            tab.classList.remove('active')
+        document.querySelectorAll('.panel-tab').forEach((el) => {
+            el.classList.remove('active')
         })
 
         document.querySelector(`#panel-${tab}`).classList.add('active')
@@ -147,29 +134,10 @@ export class ChatUI {
         this.messagesContainer = document.getElementById('chat-messages')
     }
 
-    addMessage(text, type = 'user', options = {}) {
+    addMessage(text, type = 'user') {
         if (!this.messagesContainer) return
         const msg = document.createElement('div')
         msg.className = `chat-message ${type}`
-
-        // external sources get a colored badge and username
-        if (options.source && options.source !== 'local') {
-            msg.classList.add(`source-${options.source}`)
-            if (options.username) {
-                const badge = document.createElement('span')
-                badge.className = `source-badge ${options.source}`
-                badge.textContent =
-                    options.source.charAt(0).toUpperCase() +
-                    options.source.slice(1)
-                msg.appendChild(badge)
-
-                const username = document.createElement('span')
-                username.className = 'chat-username'
-                username.textContent = options.username + ': '
-                if (options.color) username.style.color = options.color
-                msg.appendChild(username)
-            }
-        }
 
         const textSpan = document.createElement('span')
         textSpan.className = 'chat-text'
@@ -178,15 +146,6 @@ export class ChatUI {
 
         this.messagesContainer.appendChild(msg)
         this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight
-    }
-
-    addTwitchMessage(username, message, badges = [], color = '') {
-        this.addMessage(message, 'user', {
-            source: 'twitch',
-            username,
-            color: color || '#9147ff',
-            badges,
-        })
     }
 
     showInterimTranscription(text) {
@@ -257,9 +216,6 @@ export class ChatUI {
 }
 
 export class IntegrationsUI {
-    // TODO: add updateTwitch({ status, channel }) method
-    // TODO: add updateDiscord({ status, voiceChannel }) method
-    // TODO: add updateDonation({ enabled, queue }) method
     updateSounds({ count = '-', aliases = '-' } = {}) {
         setText('sounds-count', count)
         setText('sounds-aliases', aliases)

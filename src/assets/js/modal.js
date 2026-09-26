@@ -17,7 +17,10 @@ function ensureOverlay() {
 }
 
 // promise-based replacement for window.confirm
-export function confirmModal(message, { confirmText = 'Confirm', danger = false } = {}) {
+export function confirmModal(
+    message,
+    { confirmText = 'Confirm', danger = false } = {}
+) {
     const el = ensureOverlay()
     el.querySelector('.modal-message').textContent = message
     const confirmBtn = el.querySelector('.modal-confirm')
@@ -36,8 +39,16 @@ export function confirmModal(message, { confirmText = 'Confirm', danger = false 
         }
         confirmBtn.addEventListener('click', () => close(true), opts)
         cancelBtn.addEventListener('click', () => close(false), opts)
-        el.addEventListener('click', (e) => e.target === el && close(false), opts)
-        document.addEventListener('keydown', (e) => e.key === 'Escape' && close(false), opts)
+        el.addEventListener(
+            'click',
+            (e) => e.target === el && close(false),
+            opts
+        )
+        document.addEventListener(
+            'keydown',
+            (e) => e.key === 'Escape' && close(false),
+            opts
+        )
         confirmBtn.focus()
     })
 }

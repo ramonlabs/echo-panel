@@ -14,7 +14,11 @@
                     <span>Echo</span>
                     <span id="panel-state" class="panel-state">idle</span>
                 </div>
-                <button id="settings-button" class="header-button" title="Settings">
+                <button
+                    id="settings-button"
+                    class="header-button"
+                    title="Settings"
+                >
                     <svg viewBox="0 0 24 24">
                         <path
                             d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41L9.25 5.35C8.66 5.59 8.12 5.92 7.63 6.29L5.24 5.33c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"
@@ -123,7 +127,10 @@
                             </div>
                             <div class="status-item">
                                 <div class="status-label">First Audio</div>
-                                <div class="status-value" id="perf-first-audio-time">
+                                <div
+                                    class="status-value"
+                                    id="perf-first-audio-time"
+                                >
                                     -
                                 </div>
                             </div>
@@ -144,22 +151,10 @@
                         </div>
                     </div>
 
-                    <!-- Colors -->
+                    <!-- Colors, filled from the avatar's character -->
                     <div class="control-group">
                         <div class="control-group-label">Color</div>
-                        <div class="control-buttons">
-                            <button>Default</button>
-                            <button>Evil</button>
-                            <button>Grey</button>
-                            <button>Pink</button>
-                            <button>Orchid</button>
-                            <button>Oceanblue</button>
-                            <button>Oldgold</button>
-                            <button>Pumkin</button>
-                            <button>Cyberpunk</button>
-                            <button>Brightlavender</button>
-                            <button>Sunshine</button>
-                        </div>
+                        <div class="control-buttons" id="color-buttons"></div>
                     </div>
 
                     <!-- States -->
@@ -184,137 +179,11 @@
                             <button id="mode-unfiltered">Off</button>
                         </div>
                     </div>
-
                 </div>
             </div>
             <!-- Integrations -->
             <div id="integrations-container" class="panel-tab-content">
                 <div class="status-section">
-                    <!-- TODO: add integrations -->
-                    <!--
-                    <div class="control-group">
-                        <div class="control-group-label">Twitch Chat</div>
-                        <div class="status-grid">
-                            <div class="status-item">
-                                <div class="status-label">Status</div>
-                                <div
-                                    class="status-value"
-                                    id="twitch-connection"
-                                >
-                                    Checking...
-                                </div>
-                            </div>
-                            <div class="status-item">
-                                <div class="status-label">Channel</div>
-                                <div class="status-value" id="twitch-channel">
-                                    -
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    -->
-                    <!--
-                    <div class="control-group">
-                        <div class="control-group-label">Discord</div>
-                        <div class="integration-status" id="discord-status">
-                            <div class="status-grid">
-                                <div class="status-item">
-                                    <div class="status-label">Status</div>
-                                    <div
-                                        class="status-value"
-                                        id="discord-connection"
-                                    >
-                                        Checking...
-                                    </div>
-                                </div>
-                                <div class="status-item">
-                                    <div class="status-label">
-                                        Voice Channel
-                                    </div>
-                                    <div
-                                        class="status-value"
-                                        id="discord-voice"
-                                    >
-                                        -
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="discord-join-form">
-                                <div class="discord-join-form-input">
-                                    <input
-                                        type="text"
-                                        class="discord-channel-name"
-                                        id="discord-channel-name"
-                                        placeholder="Channel name or ID"
-                                    />
-                                    <button
-                                        class="discord-join-button"
-                                        id="discord-vc-btn"
-                                    >
-                                        Join
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    -->
-
-                    <!-- Donation TTS (Testing) -->
-                    <!--
-                    <div class="control-group">
-                        <div class="control-group-label">
-                            Donation TTS (Testing)
-                        </div>
-                        <div class="integration-status" id="donation-status">
-                            <div class="status-grid">
-                                <div class="status-item">
-                                    <div class="status-label">Status</div>
-                                    <div
-                                        class="status-value"
-                                        id="donation-enabled"
-                                    >
-                                        Enabled
-                                    </div>
-                                </div>
-                                <div class="status-item">
-                                    <div class="status-label">Queue</div>
-                                    <div
-                                        class="status-value"
-                                        id="donation-queue"
-                                    >
-                                        0
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="donation-test-form">
-                                <input
-                                    type="text"
-                                    id="donation-test-name"
-                                    class="donation-test-name"
-                                    placeholder="Donor name"
-                                />
-                                <input
-                                    type="number"
-                                    class="donation-test-amount"
-                                    id="donation-test-amount"
-                                    placeholder="Amount"
-                                    value="5.00"
-                                    step="0.01"
-                                    min="0"
-                                />
-                                <textarea
-                                    id="donation-test-message"
-                                    class="donation-test-message"
-                                    placeholder="Donation message..."
-                                ></textarea>
-                                <button class="donation-test-button">
-                                    Donate
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    -->
-
                     <div class="control-group">
                         <div class="control-group-label">Sound Effects</div>
                         <div class="integration-status" id="sounds-status">
@@ -491,7 +360,9 @@
                         </div>
                         <div class="segmented" id="scale-buttons">
                             <button data-scale="0.8">Small</button>
-                            <button data-scale="1" class="active">Normal</button>
+                            <button data-scale="1" class="active">
+                                Normal
+                            </button>
                             <button data-scale="1.3">Large</button>
                         </div>
                     </div>
@@ -501,7 +372,8 @@
                         <div class="settings-row-info">
                             <div class="settings-row-title">Clear History</div>
                             <div class="settings-row-desc">
-                                Erases all conversation and memory. Cannot be undone.
+                                Erases all conversation and memory. Cannot be
+                                undone.
                             </div>
                         </div>
                         <button id="clear-history-btn" class="settings-danger">

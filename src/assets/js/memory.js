@@ -46,7 +46,7 @@ export class MemoryUI {
     async fetchStats() {
         try {
             return await (await fetch(`${this.apiUrl}/stats`)).json()
-        } catch (e) {
+        } catch {
             return { long_term_memories: 0, short_term_messages: 0 }
         }
     }
@@ -58,7 +58,7 @@ export class MemoryUI {
             const data = await this.fetchStats()
             if (lt) lt.textContent = data.long_term_memories ?? 0
             if (st) st.textContent = data.short_term_messages ?? 0
-        } catch (e) {
+        } catch {
             if (lt) lt.textContent = '?'
             if (st) st.textContent = '?'
         }
@@ -128,7 +128,7 @@ export class MemoryUI {
                 list.appendChild(item)
             }
             container.replaceChildren(list)
-        } catch (e) {
+        } catch {
             container.innerHTML =
                 '<div class="empty-state">Failed to load memories</div>'
         }
@@ -154,7 +154,7 @@ export class MemoryUI {
             this.convoMessages = data.messages || []
             this.convoTotal = data.total || 0
             this.renderConvoPage()
-        } catch (e) {
+        } catch {
             container.innerHTML =
                 '<div class="empty-state">No conversation history.</div>'
         }
@@ -278,7 +278,7 @@ export class MemoryUI {
             form.appendChild(save)
 
             container.replaceChildren(form)
-        } catch (e) {
+        } catch {
             container.innerHTML =
                 '<div class="empty-state">Failed to load user info</div>'
         }
@@ -312,7 +312,12 @@ export class MemoryUI {
 
     // confirm then DELETE, returns true once the server removed it
     async confirmDelete(message, path) {
-        if (!(await confirmModal(message, { confirmText: 'Delete', danger: true })))
+        if (
+            !(await confirmModal(message, {
+                confirmText: 'Delete',
+                danger: true,
+            }))
+        )
             return false
         const res = await fetch(`${this.apiUrl}${path}`, { method: 'DELETE' })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -321,7 +326,12 @@ export class MemoryUI {
 
     async deleteMemory(memoryId, itemEl) {
         try {
-            if (!(await this.confirmDelete('Delete this memory?', `/memory/${memoryId}`)))
+            if (
+                !(await this.confirmDelete(
+                    'Delete this memory?',
+                    `/memory/${memoryId}`
+                ))
+            )
                 return
             itemEl?.remove()
             if (!this.views.list.querySelector('.memory-item')) {
@@ -336,7 +346,12 @@ export class MemoryUI {
 
     async deleteConversation(conversationId) {
         try {
-            if (!(await this.confirmDelete('Delete this exchange?', `/conversation/${conversationId}`)))
+            if (
+                !(await this.confirmDelete(
+                    'Delete this exchange?',
+                    `/conversation/${conversationId}`
+                ))
+            )
                 return
             this.convoMessages = this.convoMessages.filter(
                 (m) => m.id !== conversationId
@@ -352,7 +367,10 @@ export class MemoryUI {
             this.updateStatsDisplay()
             this.onConversationChange?.()
         } catch (e) {
-            this.onMessage?.(`Failed to delete conversation: ${e.message}`, 'error')
+            this.onMessage?.(
+                `Failed to delete conversation: ${e.message}`,
+                'error'
+            )
         }
     }
 
@@ -377,7 +395,7 @@ export class MemoryUI {
             this.switchSubTab('list')
             this.updateStatsDisplay()
             this.onMessage?.('Memory added', 'event')
-        } catch (e) {
+        } catch {
             this.onMessage?.('Failed to add memory', 'error')
         }
     }
@@ -403,7 +421,7 @@ export class MemoryUI {
                             value: input.value.trim(),
                         }),
                     })
-                } catch (e) {}
+                } catch {}
             }
         }
         this.updateStatsDisplay()
