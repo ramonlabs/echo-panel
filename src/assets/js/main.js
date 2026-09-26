@@ -276,7 +276,7 @@ function updateContentModeUI(mode) {
 
 async function clearConversationAndHistory() {
     const ok = await confirmModal(
-        'Erase all conversation and memory? This cannot be undone.',
+        'Clear the conversation? This cannot be undone.',
         { confirmText: 'Erase', danger: true }
     )
     if (!ok) return
@@ -284,10 +284,26 @@ async function clearConversationAndHistory() {
         await fetch(API('/chat/clear'), { method: 'POST' })
         chat.clear()
         memory.updateStatsDisplay()
-        logs.log('Conversation and memory cleared', 'event')
+        logs.log('Conversation cleared', 'event')
     } catch (e) {
         chat.addMessage(`Error: ${e.message}`, 'system')
         logs.log(`Clear error: ${e.message}`, 'error')
+    }
+}
+
+async function eraseMemories() {
+    const ok = await confirmModal(
+        'Erase all long term memories? This cannot be undone.',
+        { confirmText: 'Erase', danger: true }
+    )
+    if (!ok) return
+    try {
+        await fetch(`${CONFIG.memoryApiUrl}/memories`, { method: 'DELETE' })
+        memory.updateStatsDisplay()
+        memory.renderSubTab()
+        logs.log('Memories erased', 'event')
+    } catch (e) {
+        logs.log(`Erase error: ${e.message}`, 'error')
     }
 }
 
@@ -502,6 +518,10 @@ function wireSettings() {
     document
         .getElementById('clear-history-btn')
         .addEventListener('click', clearConversationAndHistory)
+
+    document
+        .getElementById('erase-memories-btn')
+        .addEventListener('click', eraseMemories)
 
     // segmented picker bound to a settings key, dataset attr carries the value
     const wireSegment = (containerId, key, attr, parse = (v) => v) => {

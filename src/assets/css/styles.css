@@ -28,6 +28,30 @@
     --accent: #7c83ff;
 }
 
+[data-theme='rose'] {
+    --primary: #dccfd4;
+    --bg-tab-active: #1b1417;
+    --border-main: #452f39;
+    --text-muted: #a38d97;
+    --bg-item-muted: #34252c;
+    --bg-header: #21181c;
+    --memory-stat-color: #dccfd4;
+    --bg-body: #130e10;
+    --accent: #ff5c8a;
+}
+
+[data-theme='forest'] {
+    --primary: #cfd9d2;
+    --bg-tab-active: #131a16;
+    --border-main: #2f4538;
+    --text-muted: #8da396;
+    --bg-item-muted: #243429;
+    --bg-header: #18211c;
+    --memory-stat-color: #cfd9d2;
+    --bg-body: #0e130f;
+    --accent: #4fd18b;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -215,6 +239,14 @@ body {
 
 .theme-swatch[data-theme='midnight'] {
     background: linear-gradient(135deg, #161922 50%, #7c83ff 50%);
+}
+
+.theme-swatch[data-theme='rose'] {
+    background: linear-gradient(135deg, #21181c 50%, #ff5c8a 50%);
+}
+
+.theme-swatch[data-theme='forest'] {
+    background: linear-gradient(135deg, #18211c 50%, #4fd18b 50%);
 }
 
 .modal-overlay {

@@ -1,5 +1,5 @@
 const KEY = 'echo-panel-settings'
-const THEMES = ['dark', 'midnight']
+const THEMES = ['dark', 'midnight', 'rose', 'forest']
 const DEFAULTS = { scale: 1, theme: 'dark' }
 
 const MIN_SCALE = 0.5
