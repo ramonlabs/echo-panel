@@ -67,7 +67,10 @@ function getControlGroupButtons(label) {
 }
 
 function handleMessage(msg) {
-    logs.log(`< ${msg.type}: ${JSON.stringify(msg.data ?? {})}`, 'debug')
+    const data = msg.data?.audio_base64
+        ? { ...msg.data, audio_base64: `<${msg.data.audio_base64.length} chars>` }
+        : msg.data ?? {}
+    logs.log(`< ${msg.type}: ${JSON.stringify(data)}`, 'debug')
     switch (msg.type) {
         case 'state_update':
             handleStateUpdate(msg.data)
