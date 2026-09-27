@@ -1,5 +1,5 @@
 import { PanelUI, StatusUI, IntegrationsUI, ChatUI, LogUI } from './ui.js'
-import { MemoryUI } from './memory.js'
+import { MemoryUI, memoryUrl } from './memory.js'
 import { Connect, ContinuousListener } from './connect.js'
 import { CONFIG } from './config.js'
 import { loadSettings, saveSettings, applySettings } from './settings.js'
@@ -298,7 +298,7 @@ async function eraseMemories() {
     )
     if (!ok) return
     try {
-        await fetch(`${CONFIG.memoryApiUrl}/memories`, { method: 'DELETE' })
+        await fetch(await memoryUrl('/memories'), { method: 'DELETE' })
         memory.updateStatsDisplay()
         memory.renderSubTab()
         logs.log('Memories erased', 'event')
@@ -310,7 +310,7 @@ async function eraseMemories() {
 async function restoreConversation() {
     try {
         const res = await fetch(
-            `${CONFIG.memoryApiUrl}/conversation/recent?limit=20`
+            await memoryUrl('/conversation/recent?limit=20')
         )
         const data = await res.json()
         const messages = data.messages || data.conversation || []

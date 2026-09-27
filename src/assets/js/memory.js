@@ -16,9 +16,24 @@ function timezoneOptions() {
     }
 }
 
+// The viewer can swap rigs at any time so ask the avatar on every call
+async function activeCharacter() {
+    try {
+        return (await (await fetch(`${CONFIG.apiUrl}/character`)).json()).id
+    } catch {
+        return ''
+    }
+}
+
+export async function memoryUrl(path) {
+    const character = await activeCharacter()
+    const url = new URL(`${CONFIG.memoryApiUrl}${path}`)
+    if (character) url.searchParams.set('character', character)
+    return url
+}
+
 export class MemoryUI {
     constructor() {
-        this.apiUrl = CONFIG.memoryApiUrl
         this.currentSubTab = 'list'
         this.onMessage = null
         this.onConversationChange = null
@@ -45,7 +60,7 @@ export class MemoryUI {
 
     async fetchStats() {
         try {
-            return await (await fetch(`${this.apiUrl}/stats`)).json()
+            return await (await fetch(await memoryUrl('/stats'))).json()
         } catch {
             return { long_term_memories: 0, short_term_messages: 0 }
         }
@@ -91,7 +106,7 @@ export class MemoryUI {
         container.innerHTML = '<div class="empty-state">Loading...</div>'
         try {
             const data = await (
-                await fetch(`${this.apiUrl}/memories?limit=50`)
+                await fetch(await memoryUrl('/memories?limit=50'))
             ).json()
             const memories = data.memories || []
             if (!memories.length) {
@@ -148,7 +163,9 @@ export class MemoryUI {
             const offset = this.convoPage * CONVO_PAGE_SIZE
             const data = await (
                 await fetch(
-                    `${this.apiUrl}/conversation/list?limit=${CONVO_PAGE_SIZE}&offset=${offset}`
+                    await memoryUrl(
+                        `/conversation/list?limit=${CONVO_PAGE_SIZE}&offset=${offset}`
+                    )
                 )
             ).json()
             this.convoMessages = data.messages || []
@@ -242,7 +259,9 @@ export class MemoryUI {
         if (!container) return
         container.innerHTML = '<div class="empty-state">Loading...</div>'
         try {
-            const data = await (await fetch(`${this.apiUrl}/user/info`)).json()
+            const data = await (
+                await fetch(await memoryUrl('/user/info'))
+            ).json()
             const userInfo = data.user_info || []
             const info = {}
             for (const mem of userInfo) {
@@ -319,7 +338,7 @@ export class MemoryUI {
             }))
         )
             return false
-        const res = await fetch(`${this.apiUrl}${path}`, { method: 'DELETE' })
+        const res = await fetch(await memoryUrl(path), { method: 'DELETE' })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         return true
     }
@@ -381,7 +400,7 @@ export class MemoryUI {
         const type = document.getElementById('add-memory-type').value
         if (!content) return
         try {
-            await fetch(`${this.apiUrl}/remember`, {
+            await fetch(await memoryUrl('/remember'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -389,6 +408,7 @@ export class MemoryUI {
                     memory_type: type,
                     importance: 0.5,
                     source: 'user',
+                    character: await activeCharacter(),
                 }),
             })
             document.getElementById('add-memory-content').value = ''
@@ -413,12 +433,13 @@ export class MemoryUI {
             const input = document.getElementById(`user-${field}`)
             if (input && input.value.trim()) {
                 try {
-                    await fetch(`${this.apiUrl}/user/info`, {
+                    await fetch(await memoryUrl('/user/info'), {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             key: field,
                             value: input.value.trim(),
+                            character: await activeCharacter(),
                         }),
                     })
                 } catch {}
